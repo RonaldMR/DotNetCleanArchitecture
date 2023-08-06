@@ -24,10 +24,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Application\Booking\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\CleanApp.Application\CleanApp.Application.csproj" />
     <ProjectReference Include="..\CleanApp.Domain\CleanApp.Domain.csproj" />
   </ItemGroup>

@@ -71,6 +71,7 @@ namespace CleanApp.Application.UseCases.Booking
                 Guests = booking.Guests,
                 RoomType = booking.Type.ToString(),
                 BreakfastIncluded = booking.BreakfastIncluded,
+                Indications = booking.Indications,
                 Status = booking.Status.ToString(),
             };
         }
