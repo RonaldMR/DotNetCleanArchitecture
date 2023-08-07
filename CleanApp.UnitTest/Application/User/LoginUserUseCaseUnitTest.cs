@@ -1,4 +1,5 @@
-﻿using CleanApp.Application.Exceptions;
+﻿using CleanApp.Application.DTO.User;
+using CleanApp.Application.Exceptions;
 using CleanApp.Application.UseCases.User;
 using CleanApp.Domain.Entities;
 using CleanApp.Domain.Repositories;
@@ -11,13 +12,19 @@ namespace CleanApp.UnitTest
         [Fact]
         public async void ShouldNotLoginWhenUserIsNotValid()
         {
+            var loginUserDTOMock = new LoginUserDTO()
+            {
+                EmailAddress = "FOO",
+                Password = "FOO"
+            };
+
             var userRepositoryMock = new Mock<IUserRepository>();
 
             userRepositoryMock.Setup(repository => repository.Get(It.IsAny<string>())).Returns(Task.FromResult<UserEntity>(null));
 
             var useCase = new LogInUserUseCase(userRepositoryMock.Object);
 
-            var act = () => useCase.Execute("FOO", "FOO");
+            var act = () => useCase.Execute(loginUserDTOMock);
 
             await Assert.ThrowsAsync<AccessDeniedException>(act);
         }
@@ -25,6 +32,12 @@ namespace CleanApp.UnitTest
         [Fact]
         public async void ShouldNotLoginWhenUserIsValidAndPasswordIsNotValid()
         {
+            var loginUserDTOMock = new LoginUserDTO()
+            {
+                EmailAddress = "FOO",
+                Password = "ANOTHERFOOPASSWORD"
+            };
+
             var userRepositoryMock = new Mock<IUserRepository>();
 
             var userMock = new UserEntity(Guid.NewGuid(), "FOO", "FOO", "FOO", "FOOPASSWORD", DateTime.Now);
@@ -33,7 +46,7 @@ namespace CleanApp.UnitTest
 
             var useCase = new LogInUserUseCase(userRepositoryMock.Object);
 
-            var act = () => useCase.Execute("FOO", "ANOTHERFOOPASSWORD");
+            var act = () => useCase.Execute(loginUserDTOMock);
 
             await Assert.ThrowsAsync<AccessDeniedException>(act);
         }
@@ -41,6 +54,12 @@ namespace CleanApp.UnitTest
         [Fact]
         public async void ShouldLoginWhenUserAndPasswordAreValid()
         {
+            var loginUserDTOMock = new LoginUserDTO()
+            {
+                EmailAddress = "FOO",
+                Password = "FOOPASSWORD"
+            };
+
             var userRepositoryMock = new Mock<IUserRepository>();
 
             var userMock = new UserEntity(Guid.NewGuid(), "FOO", "FOO", "FOO", "FOOPASSWORD", DateTime.Now);
@@ -49,7 +68,7 @@ namespace CleanApp.UnitTest
 
             var useCase = new LogInUserUseCase(userRepositoryMock.Object);
 
-            var act = () => useCase.Execute("FOO", "FOOPASSWORD");
+            var act = () => useCase.Execute(loginUserDTOMock);
 
             var result = await act();
 
