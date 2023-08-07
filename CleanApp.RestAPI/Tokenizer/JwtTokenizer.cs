@@ -56,7 +56,7 @@ namespace CleanApp.RestAPI.Tokenizer
         {
             return new SigningCredentials(
                 new SymmetricSecurityKey(
-                    Encoding.UTF8.GetBytes("RonaldMarrou")
+                    Encoding.UTF8.GetBytes("$R0na1dM4rR0u$$$$$R0na1dM4rR0u$$$$$R0na1dM4rR0u$$$$")
                 ),
                 SecurityAlgorithms.HmacSha256
             );

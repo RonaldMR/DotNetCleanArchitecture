@@ -19,6 +19,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CleanApp.Application\CleanApp.Application.csproj" />
+    <ProjectReference Include="..\CleanApp.Domain\CleanApp.Domain.csproj" />
+    <ProjectReference Include="..\CleanApp.Infrastructure\CleanApp.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

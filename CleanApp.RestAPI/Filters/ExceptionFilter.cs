@@ -1,4 +1,5 @@
 ﻿using CleanApp.Application.Exceptions;
+using CleanApp.RestAPI.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
@@ -41,6 +42,11 @@ namespace CleanApp.RestAPI.Filters
             }
 
             if (context.Exception is NewBookingStatusException)
+            {
+                statusCode = 400;
+            }
+
+            if(context.Exception is RequestErrorException)
             {
                 statusCode = 400;
             }

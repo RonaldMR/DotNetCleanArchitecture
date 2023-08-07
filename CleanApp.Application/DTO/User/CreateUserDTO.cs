@@ -14,6 +14,7 @@ namespace CleanApp.Application.DTO.User
 
         [Required]
         [MinLength(10)]
+        [EmailAddress]
         public required string EmailAddress { get; set; }
 
         [Required]

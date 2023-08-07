@@ -1,5 +1,6 @@
 ﻿using CleanApp.Application.DTO.User;
 using CleanApp.Application.UseCases.User;
+using CleanApp.RestAPI.Exceptions;
 using CleanApp.RestAPI.Tokenizer;
 using Microsoft.AspNetCore.Mvc;
 

@@ -2,6 +2,7 @@
 using CleanApp.Domain.Entities;
 using CleanApp.Domain.Enums;
 using CleanApp.Domain.Repositories;
+using Microsoft.Extensions.Configuration;
 using Npgsql;
 using System.Data;
 
@@ -11,14 +12,21 @@ namespace CleanApp.Infrastructure.Repositories
     {
         private readonly string _connectionString;
 
-        public PostgressBookingRepository(string connectionString)
+        public PostgressBookingRepository(IConfiguration configuration)
         {
+            var connectionString = configuration.GetConnectionString("Database");
+
+            if(string.IsNullOrWhiteSpace(connectionString))
+            {
+                throw new ArgumentNullException(nameof(connectionString));
+            }
+
             _connectionString = connectionString;
         }
 
         private BookingEntity GetBookingEntityFromReader(IDataReader reader)
         {
-            return new BookingEntity(new Guid(reader.GetString(0)), new Guid(reader.GetString(1)), reader.GetDateTime(2), reader.GetDateTime(3), reader.GetInt16(3), reader.GetBoolean(4), Enum.Parse<RoomType>(reader.GetString(5)), reader.GetString(6), Enum.Parse<BookingStatus>(reader.GetString(7)));
+            return new BookingEntity(new Guid(reader[0].ToString()), new Guid(reader[1].ToString()), reader.GetDateTime(2), reader.GetDateTime(3), reader.GetInt16(4), reader.GetBoolean(5), Enum.Parse<RoomType>(reader.GetString(6)), reader.GetString(7), Enum.Parse<BookingStatus>(reader.GetString(8)));
         }
 
         public async Task<BookingEntity> Create(BookingEntity bookingEntity)
@@ -27,15 +35,17 @@ namespace CleanApp.Infrastructure.Repositories
             {
                 await conn.OpenAsync();
 
-                await using (var cmd = new NpgsqlCommand("INSERT INTO bookings (id, userId, fromDate, toDate, breakfastIncluded, type, indications, status) VALUES (@id, @userId, @fromDate, @toDate, @breakfastIncluded, @type, @indications, @status) returning *", conn))
+                await using (var cmd = new NpgsqlCommand("INSERT INTO bookings (id, \"userId\", \"fromDate\", \"toDate\", \"guests\", \"breakfastIncluded\", type, indications, status) VALUES (@id, @userId, @fromDate, @toDate, @guests, @breakfastIncluded, @type, @indications, @status) returning *", conn))
                 {
                     cmd.Parameters.AddWithValue("id", bookingEntity.Id);
                     cmd.Parameters.AddWithValue("userId", bookingEntity.UserId);
                     cmd.Parameters.AddWithValue("fromDate", bookingEntity.FromDate);
                     cmd.Parameters.AddWithValue("toDate", bookingEntity.ToDate);
+                    cmd.Parameters.AddWithValue("guests", bookingEntity.Guests);
                     cmd.Parameters.AddWithValue("breakfastIncluded", bookingEntity.BreakfastIncluded);
-                    cmd.Parameters.AddWithValue("type", bookingEntity.RoomType);
-                    cmd.Parameters.AddWithValue("status", bookingEntity.Status);
+                    cmd.Parameters.AddWithValue("type", bookingEntity.RoomType.ToString());
+                    cmd.Parameters.AddWithValue("indications", bookingEntity.Indications);
+                    cmd.Parameters.AddWithValue("status", bookingEntity.Status.ToString());
 
                     await using (var reader = await cmd.ExecuteReaderAsync())
                     {
@@ -94,14 +104,16 @@ namespace CleanApp.Infrastructure.Repositories
             {
                 await conn.OpenAsync();
 
-                await using (var cmd = new NpgsqlCommand(" UPDATE bookings SET fromDate=@fromDate, toDate=@toDate, breakfastIncluded=@breakfastIncluded, type=@type, status=@status WHERE id = @id returning *", conn))
+                await using (var cmd = new NpgsqlCommand(" UPDATE bookings SET \"fromDate\"=@fromDate, \"toDate\"=@toDate, \"guests\"=@guests, \"breakfastIncluded\"=@breakfastIncluded, type=@type, indications = @indications, status=@status WHERE id = @id returning *", conn))
                 {
                     cmd.Parameters.AddWithValue("id", bookingEntity.Id);
                     cmd.Parameters.AddWithValue("fromDate", bookingEntity.FromDate);
                     cmd.Parameters.AddWithValue("toDate", bookingEntity.ToDate);
+                    cmd.Parameters.AddWithValue("guests", bookingEntity.Guests);
                     cmd.Parameters.AddWithValue("breakfastIncluded", bookingEntity.BreakfastIncluded);
-                    cmd.Parameters.AddWithValue("type", bookingEntity.RoomType);
-                    cmd.Parameters.AddWithValue("status", bookingEntity.Status);
+                    cmd.Parameters.AddWithValue("type", bookingEntity.RoomType.ToString());
+                    cmd.Parameters.AddWithValue("indications", bookingEntity.Indications);
+                    cmd.Parameters.AddWithValue("status", bookingEntity.Status.ToString());
 
                     await using (var reader = await cmd.ExecuteReaderAsync())
                     {

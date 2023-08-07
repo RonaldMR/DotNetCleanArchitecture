@@ -1,12 +1,26 @@
+using CleanApp.Application.UseCases.Booking;
+using CleanApp.Application.UseCases.User;
+using CleanApp.Domain.Repositories;
+using CleanApp.Infrastructure.Repositories;
 using CleanApp.RestAPI.Filters;
 using CleanApp.RestAPI.Tokenizer;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddScoped<IUserRepository, PostgressUserRepository>();
+builder.Services.AddScoped<IBookingRepository, PostgressBookingRepository>();
+
+builder.Services.AddTransient<CreateBookingUseCase>();
+builder.Services.AddTransient<GetBookingUseCase>();
+builder.Services.AddTransient<UpdateBookingUseCase>();
+builder.Services.AddTransient<DeleteBookingUseCase>();
+
+builder.Services.AddTransient<CreateUserUseCase>();
+builder.Services.AddTransient<LogInUserUseCase>();
 
 // Add services to the container.
 
@@ -55,7 +69,7 @@ builder.Services
             ValidIssuer = "apiWithAuthBackend",
             ValidAudience = "apiWithAuthBackend",
             IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes("RonaldMarrou")
+                Encoding.UTF8.GetBytes("$R0na1dM4rR0u$$$$$R0na1dM4rR0u$$$$$R0na1dM4rR0u$$$$")
             ),
         };
     });

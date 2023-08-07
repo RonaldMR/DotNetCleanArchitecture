@@ -1,5 +1,6 @@
 ﻿using CleanApp.Application.DTO.Booking;
 using CleanApp.Application.UseCases.Booking;
+using CleanApp.RestAPI.Exceptions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -27,6 +28,13 @@ namespace CleanApp.RestAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateBookingDTO request)
         {
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.Select(x => string.Join(",", x.Value.Errors.Select(y => y.ErrorMessage).ToArray())).ToArray();
+
+                throw new RequestErrorException(errors);
+            }
+
             var userEmail = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value;
             var response = await this._createBookingUseCase.Execute(userEmail, request);
             return Created(new Uri(string.Format("/api/booking/{0}", response.Id), UriKind.Relative), response);
@@ -36,6 +44,13 @@ namespace CleanApp.RestAPI.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(Guid id, [FromBody] UpdateBookingDTO request)
         {
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.Select(x => string.Join(",", x.Value.Errors.Select(y => y.ErrorMessage).ToArray())).ToArray();
+
+                throw new RequestErrorException(errors);
+            }
+
             var userEmail = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value;
             var response = await this._updateBookingUseCase.Execute(userEmail, id, request);
             return Ok(response);
