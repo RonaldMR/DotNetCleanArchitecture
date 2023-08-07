@@ -8,6 +8,9 @@ EXPOSE 443
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
 COPY ["CleanApp.RestAPI/CleanApp.RestAPI.csproj", "CleanApp.RestAPI/"]
+COPY ["CleanApp.Application/CleanApp.Application.csproj", "CleanApp.Application/"]
+COPY ["CleanApp.Domain/CleanApp.Domain.csproj", "CleanApp.Domain/"]
+COPY ["CleanApp.Infrastructure/CleanApp.Infrastructure.csproj", "CleanApp.Infrastructure/"]
 RUN dotnet restore "CleanApp.RestAPI/CleanApp.RestAPI.csproj"
 COPY . .
 WORKDIR "/src/CleanApp.RestAPI"
