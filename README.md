@@ -23,3 +23,5 @@ When editing the booking, I should only update the status. Consider the followin
 * From Confirmed to Closed.
 
 Cancelled / Closed are the last status a booking have.
+
+Consider that only the user that created a booking is able to See / Change State / Delete it. Other user than the creator would not be able to perform those operations.
