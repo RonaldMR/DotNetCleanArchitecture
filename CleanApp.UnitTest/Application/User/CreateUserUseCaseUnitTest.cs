@@ -60,7 +60,6 @@ namespace CleanApp.UnitTest
             Assert.Equal(result.FirstName, expectedUser.FirstName);
             Assert.Equal(result.LastName, expectedUser.LastName);
             Assert.Equal(result.EmailAddress, expectedUser.EmailAddress);
-            Assert.Equal(result.Password, expectedUser.Password);
         }
     }
 }

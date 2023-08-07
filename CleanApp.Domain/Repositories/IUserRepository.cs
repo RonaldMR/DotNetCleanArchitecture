@@ -6,6 +6,6 @@ namespace CleanApp.Domain.Repositories
     {
         Task<UserEntity> Create(UserEntity userEntity);
 
-        Task<UserEntity> Get(string emailAddress);
+        Task<UserEntity?> Get(string emailAddress);
     }
 }

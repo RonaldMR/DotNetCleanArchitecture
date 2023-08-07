@@ -75,7 +75,6 @@ namespace CleanApp.UnitTest
             Assert.Equal(result.FirstName, userMock.FirstName);
             Assert.Equal(result.LastName, userMock.LastName);
             Assert.Equal(result.EmailAddress, userMock.EmailAddress);
-            Assert.Equal(result.Password, userMock.Password);
         }
     }
 }

@@ -7,16 +7,16 @@ namespace CleanApp.Application.UseCases.User
 {
     public class CreateUserUseCase
     {
-        private readonly IUserRepository repository;
+        private readonly IUserRepository _repository;
 
         public CreateUserUseCase(IUserRepository repository)
         {
-            this.repository = repository;
+            this._repository = repository;
         }
 
         public async Task<UserDTO> Execute(CreateUserDTO request)
         {
-            var existingUser = await repository.Get(request.EmailAddress);
+            var existingUser = await _repository.Get(request.EmailAddress);
 
             if(existingUser != null)
             {
@@ -25,13 +25,12 @@ namespace CleanApp.Application.UseCases.User
 
             var user = new UserEntity(request.FirstName, request.LastName, request.EmailAddress, request.Password);
 
-            user = await this.repository.Create(user);
+            user = await this._repository.Create(user);
 
             return new UserDTO()
             {
                 Id = user.Id,
                 EmailAddress = user.EmailAddress,
-                Password = user.Password,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 CreationDate = user.CreationDate

@@ -13,7 +13,7 @@ namespace CleanApp.Domain.Entities
             this.toDate = toDate;
             this.guests = guests;
             this.breakfastIncluded = breakfastIncluded;
-            this.type = type;
+            this.roomType = type;
             this.indications = indications;
             this.status = status;
         }
@@ -27,7 +27,7 @@ namespace CleanApp.Domain.Entities
 			this.toDate = toDate;
 			this.guests = guests;
 			this.breakfastIncluded = breakfastIncluded;
-			this.type = type;
+			this.roomType = type;
 			this.indications = indications;
 			this.status = status;
 		}
@@ -79,12 +79,12 @@ namespace CleanApp.Domain.Entities
 			set { breakfastIncluded = value; }
 		}
 
-		private RoomType type;
+		private RoomType roomType;
 
-		public RoomType Type
+		public RoomType RoomType
 		{
-			get { return type; }
-			set { type = value; }
+			get { return roomType; }
+			set { roomType = value; }
 		}
 
 		private string? indications;

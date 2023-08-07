@@ -8,7 +8,7 @@ namespace CleanApp.Domain.Repositories
 
         Task<BookingEntity> Update(BookingEntity bookingEntity);
 
-        Task<BookingEntity> Get(Guid id);
+        Task<BookingEntity?> Get(Guid id);
 
         Task Delete(Guid id);
     }

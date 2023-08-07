@@ -10,19 +10,19 @@ namespace CleanApp.Application.UseCases.Booking
 {
     public class CreateBookingUseCase
     {
-        private readonly IBookingRepository bookingRepository;
+        private readonly IBookingRepository _bookingRepository;
 
-        private readonly IUserRepository userRepository;
+        private readonly IUserRepository _userRepository;
 
         public CreateBookingUseCase(IBookingRepository bookingRepository, IUserRepository userRepository)
         {
-            this.bookingRepository = bookingRepository;
-            this.userRepository = userRepository;
+            this._bookingRepository = bookingRepository;
+            this._userRepository = userRepository;
         }
 
         public async Task<BookingDTO> Execute(string userEmailAddress, CreateBookingDTO request)
         {
-            var existingUser = await this.userRepository.Get(userEmailAddress);
+            var existingUser = await this._userRepository.Get(userEmailAddress);
 
             if(existingUser == null)
             {
@@ -74,7 +74,7 @@ namespace CleanApp.Application.UseCases.Booking
 
             var booking = new BookingEntity(existingUser.Id, fromDate, toDate, guests, request.BreakfastIncluded, roomType, request.Indications, status);
 
-            booking = await this.bookingRepository.Create(booking);
+            booking = await this._bookingRepository.Create(booking);
 
             return new BookingDTO()
             {

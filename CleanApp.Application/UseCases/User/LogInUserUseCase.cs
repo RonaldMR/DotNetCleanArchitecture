@@ -6,16 +6,16 @@ namespace CleanApp.Application.UseCases.User
 {
     public class LogInUserUseCase
     {
-        private readonly IUserRepository repository;
+        private readonly IUserRepository _repository;
 
         public LogInUserUseCase(IUserRepository repository)
         {
-            this.repository = repository;
+            this._repository = repository;
         }
 
         public async Task<UserDTO> Execute(LoginUserDTO request)
         {
-            var existingUser = await this.repository.Get(request.EmailAddress);
+            var existingUser = await this._repository.Get(request.EmailAddress);
 
             if(existingUser?.Password != request.Password)
             {
@@ -26,7 +26,6 @@ namespace CleanApp.Application.UseCases.User
             {
                 Id = existingUser.Id,
                 EmailAddress = existingUser.EmailAddress,
-                Password = existingUser.Password,
                 FirstName = existingUser.FirstName,
                 LastName = existingUser.LastName,
                 CreationDate = existingUser.CreationDate

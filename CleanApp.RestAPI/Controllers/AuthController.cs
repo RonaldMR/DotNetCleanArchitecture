@@ -9,22 +9,22 @@ namespace CleanApp.RestAPI.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private readonly CreateUserUseCase createUserUseCase;
-        private readonly LogInUserUseCase logInUserUseCase;
-        private readonly JwtTokenizer jwtTokenizer;
+        private readonly CreateUserUseCase _createUserUseCase;
+        private readonly LogInUserUseCase _logInUserUseCase;
+        private readonly JwtTokenizer _jwtTokenizer;
 
         public AuthController(CreateUserUseCase createUserUseCase, LogInUserUseCase logInUserUseCase, JwtTokenizer tokenizer)
         {
-            this.createUserUseCase = createUserUseCase;
-            this.logInUserUseCase = logInUserUseCase;
-            this.jwtTokenizer = tokenizer;
+            this._createUserUseCase = createUserUseCase;
+            this._logInUserUseCase = logInUserUseCase;
+            this._jwtTokenizer = tokenizer;
         }
 
         [HttpPost]
         [Route("register")]
         public async Task<IActionResult> Register([FromBody] CreateUserDTO request)
         {
-            var response = await this.createUserUseCase.Execute(request);
+            var response = await this._createUserUseCase.Execute(request);
             return Created(new Uri(string.Format("/api/booking/{0}", response.Id), UriKind.Relative), response);
         }
 
@@ -32,9 +32,9 @@ namespace CleanApp.RestAPI.Controllers
         [Route("login")]
         public async Task<IActionResult> Register([FromBody] LoginUserDTO request)
         {
-            var user = await this.logInUserUseCase.Execute(request);
+            var user = await this._logInUserUseCase.Execute(request);
 
-            var token = this.jwtTokenizer.Tokenize(user.EmailAddress);
+            var token = this._jwtTokenizer.Tokenize(user.EmailAddress);
 
             var response = new
             {

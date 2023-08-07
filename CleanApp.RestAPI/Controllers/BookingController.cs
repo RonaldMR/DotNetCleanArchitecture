@@ -11,24 +11,24 @@ namespace CleanApp.RestAPI.Controllers
     [Authorize]
     public class BookingController : ControllerBase
     {
-        private readonly CreateBookingUseCase createBookingUseCase;
-        private readonly GetBookingUseCase getBookingUseCase;
-        private readonly UpdateBookingUseCase updateBookingUseCase;
-        private readonly DeleteBookingUseCase deleteBookingUseCase;
+        private readonly CreateBookingUseCase _createBookingUseCase;
+        private readonly GetBookingUseCase _getBookingUseCase;
+        private readonly UpdateBookingUseCase _updateBookingUseCase;
+        private readonly DeleteBookingUseCase _deleteBookingUseCase;
 
         public BookingController(CreateBookingUseCase createBookingUseCase, GetBookingUseCase getBookingUseCase, UpdateBookingUseCase updateBookingUseCase, DeleteBookingUseCase deleteBookingUseCase) 
         {
-            this.createBookingUseCase = createBookingUseCase;
-            this.getBookingUseCase = getBookingUseCase;
-            this.updateBookingUseCase = updateBookingUseCase;
-            this.deleteBookingUseCase = deleteBookingUseCase;
+            this._createBookingUseCase = createBookingUseCase;
+            this._getBookingUseCase = getBookingUseCase;
+            this._updateBookingUseCase = updateBookingUseCase;
+            this._deleteBookingUseCase = deleteBookingUseCase;
         }
 
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateBookingDTO request)
         {
             var userEmail = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value;
-            var response = await this.createBookingUseCase.Execute(userEmail, request);
+            var response = await this._createBookingUseCase.Execute(userEmail, request);
             return Created(new Uri(string.Format("/api/booking/{0}", response.Id), UriKind.Relative), response);
 
         }
@@ -37,7 +37,7 @@ namespace CleanApp.RestAPI.Controllers
         public async Task<IActionResult> Update(Guid id, [FromBody] UpdateBookingDTO request)
         {
             var userEmail = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value;
-            var response = await this.updateBookingUseCase.Execute(userEmail, id, request);
+            var response = await this._updateBookingUseCase.Execute(userEmail, id, request);
             return Ok(response);
 
         }
@@ -46,7 +46,7 @@ namespace CleanApp.RestAPI.Controllers
         public async Task<IActionResult> Get(Guid id)
         {
             var userEmail = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value;
-            var response = await this.getBookingUseCase.Execute(userEmail, id);
+            var response = await this._getBookingUseCase.Execute(userEmail, id);
             return Ok(response);
         }
 
@@ -54,7 +54,7 @@ namespace CleanApp.RestAPI.Controllers
         public async Task<IActionResult> Delete(Guid id)
         {
             var userEmail = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value;
-            await this.deleteBookingUseCase.Execute(userEmail, id);
+            await this._deleteBookingUseCase.Execute(userEmail, id);
             return Ok();
         }
     }
