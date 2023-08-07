@@ -11,7 +11,7 @@ namespace CleanApp.Application.DTO.Booking
         public DateTime ToDate { get; set; }
 
         [Required]
-        [Range(0, short.MaxValue)]
+        [Range(1, short.MaxValue)]
         public short Guests { get; set; }
 
         public bool BreakfastIncluded { get; set; }
